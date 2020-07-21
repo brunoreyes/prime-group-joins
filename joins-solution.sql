@@ -14,7 +14,7 @@ JOIN "products" on "products"."id" = "warehouse_product"."product_id"
 WHERE "description" = 'cheetos';
 
 --4. Which warehouses have diet pepsi?
-SELECT "on_hand" FROM "warehouse"
+SELECT "warehouse" FROM "warehouse"
 JOIN "warehouse_product" on "warehouse_product"."warehouse_id"="warehouse"."id"
 JOIN "products" on "products"."id" = "warehouse_product"."product_id"
 WHERE "description" = 'diet pepsi';
