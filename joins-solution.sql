@@ -34,19 +34,34 @@ SELECT COUNT(*) FROM "products";
 
 
 --8. What is the total available on-hand quantity of diet pepsi?
-SELECT sum("on_hand") FROM "warehouse"
+SELECT SUM("on_hand") FROM "warehouse"
 JOIN "warehouse_product" on "warehouse_product"."warehouse_id"="warehouse"."id"
 JOIN "products" on "products"."id" = "warehouse_product"."product_id"
 WHERE "description" = 'diet pepsi';
 
 -- Stretch
 -- How much was the total cost for each order?
--- SELECT "customers"."first_name", "customers"."last_name", SUM("customers"."id") FROM "orders"
--- JOIN "addresses" ON "orders"."address_id" = "addresses"."id"
--- JOIN "customers" ON "customers"."id" = "addresses"."customer_id"
--- GROUP BY "customers"."id";
+SELECT orders.id as order_id, SUM(line_items.quantity * products.unit_price) as order_total_cost FROM orders
+JOIN line_items ON line_items.order_id = orders.id
+JOIN products ON products.id = line_items.product_id
+GROUP BY orders.id
+ORDER BY orders.id ASC;
+
 
 -- How much has each customer spent in total?
-
+SELECT customers.id as customer_id, SUM(line_items.quantity * products.unit_price) as customer_total_cost FROM customers
+JOIN addresses ON customers.id = addresses.id
+JOIN orders ON addresses.id = orders.id
+JOIN line_items ON line_items.order_id = orders.id
+JOIN products ON products.id = line_items.product_id
+GROUP BY customers.id
+ORDER BY customers.id ASC;
 
 -- How much has each customer spent in total? Customers who have spent $0 should still show up in the table. It should say 0, not NULL (research coalesce).
+SELECT customers.id as customer_id, SUM(line_items.quantity * products.unit_price) as customer_total_cost FROM customers
+JOIN addresses ON customers.id = addresses.id
+JOIN orders ON addresses.id = orders.id
+JOIN line_items ON line_items.order_id = orders.id
+JOIN products ON products.id = line_items.product_id
+GROUP BY customers.id
+ORDER BY customers.id ASC;
